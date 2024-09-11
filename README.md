@@ -4,5 +4,5 @@ TensorBrain permite clasificar imágenes de pacientes con cáncer cerebral poten
 
 ## DataSet
 El dataset está compuesto de 800 imágenes por resonancia magnética (MRI), de las cuales 392 presentan casos de cáncer cerebral y 408 son de pacientes sanos.
+
 [![cancercerebral.gif](https://i.postimg.cc/RVf8MjYH/ezgif-com-optimize.gif)](https://postimg.cc/tYqDkmpq)
-[![ezgif-com-optimize.gif](https://i.postimg.cc/RVf8MjYH/ezgif-com-optimize.gif)](https://postimg.cc/tYqDkmpq)
