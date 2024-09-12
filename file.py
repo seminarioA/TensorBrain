@@ -1,44 +1,50 @@
-from keras.models import load_model  # TensorFlow is required for Keras to work
-from PIL import Image, ImageOps  # Install pillow instead of PIL
+# TensorFlow y tf.keras
+import tensorflow as tf
+from tensorflow import keras
+
+# Librerias de ayuda
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Disable scientific notation for clarity
-np.set_printoptions(suppress=True)
+print(tf.__version__)
 
-# Load the model
-model = load_model("keras_Model.h5", compile=False)
+fashion_mnist = keras.datasets.fashion_mnist
 
-# Load the labels
-class_names = open("labels.txt", "r").readlines()
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
-# Create the array of the right shape to feed into the keras model
-# The 'length' or number of images you can put into the array is
-# determined by the first position in the shape tuple, in this case 1
-data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
-# Replace this with the path to your image
-image = Image.open("<IMAGE_PATH>").convert("RGB")
+train_images = train_images / 255.0
 
-# resizing the image to be at least 224x224 and then cropping from the center
-size = (224, 224)
-image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
+test_images = test_images / 255.0
 
-# turn the image into a numpy array
-image_array = np.asarray(image)
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10, activation='softmax')
+])
 
-# Normalize the image
-normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
 
-# Load the image into the array
-data[0] = normalized_image_array
+# Entrenar el modelo
 
-# Predicts the model
-prediction = model.predict(data)
-index = np.argmax(prediction)
-class_name = class_names[index]
-confidence_score = prediction[0][index]
+model.fit(train_images, train_labels, epochs=10)
 
-# Print prediction and confidence score
-print("Class:", class_name[2:], end="")
-print("Confidence Score:", confidence_score)
+# Evaluar exactitud
 
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+
+print('\nTest accuracy:', test_acc)
+
+# Hacer predicciones
+
+predictions = model.predict(test_images)
+predictions[0]
+
+# Probar modelo sobre una unica imagen
+# Grab an image from the test dataset.
+img = test_images[1]
+print(img.shape)
